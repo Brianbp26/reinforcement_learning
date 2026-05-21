@@ -22,6 +22,31 @@ El espacio de estados es `8 × 10 × 2⁴ × 4 × 4 = 20.480 estados` — maneja
 
 ---
 
+## Mapa del entorno (8×10)
+
+```
+     Col→  0     1     2     3     4     5     6     7     8     9
+Fila 0  [ ⛵  ][  ~  ][  ~  ][ 🌴  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ]
+Fila 1  [  ~  ][ 🌴  ][  ~  ][  ~  ][  ~  ][ 💰+35][  ~  ][ 🌴  ][  ~  ][  ~  ]
+Fila 2  [  ~  ][  ~  ][  ~  ][ 🌧  ][  ~  ][  ~  ][  ~  ][  ~  ][ 🌊↓ ][  ~  ]
+Fila 3  [  ~  ][  ~  ][ 🌧  ][  ~  ][  ~  ][ 🌴  ][  ~  ][  ~  ][ 🌊↓ ][  ~  ]
+Fila 4  [  ~  ][ 🌴  ][  ~  ][ ⛈  ][  ~  ][  ~  ][ ⛈  ][  ~  ][  ~  ][ 💎+50]
+Fila 5  [  ~  ][  ~  ][  ~  ][  ~  ][ 🌀  ][  ~  ][  ~  ][ 🌴  ][  ~  ][  ~  ]
+Fila 6  [  ~  ][  ~  ][ ⛈  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][ 📦+20]
+Fila 7  [ ⚓  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][ 👑+70][  ~  ]
+```
+
+| Símbolo | Tipo | Efecto |
+|---|---|---|
+| ⛵ | Inicio | Posición inicial del barco (0,0) |
+| ⚓ | Puerto | Objetivo — llegar aquí con los 4 cofres da `+100` |
+| 💰 📦 💎 👑 | Cofres | `+35 / +20 / +50 / +70` — se recogen al pisarlos |
+| 🌴 | Isla | Celda bloqueada, el barco rebota |
+| 🌧 | Tormenta moderada | Reduce `p_dir` en `−0.15` |
+| ⛈ | Tormenta severa | Reduce `p_dir` en `−0.25` |
+| 🌊↓ | Corriente sur | Desplazamiento determinista hacia el sur |
+| 🌀 | Maelstrom | Atrapa 2 turnos · `−5` por turno · inescapable |
+
 ## Estructura del notebook
 
 El notebook sigue exactamente las secciones que pide el enunciado. Cada sección alterna celdas markdown (análisis) con celdas de código (implementación):
