@@ -47,36 +47,38 @@ Fila 7  [ ⚓  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][  ~  ][ 👑+70][  ~ 
 | 🌊↓ | Corriente sur | Desplazamiento determinista hacia el sur |
 | 🌀 | Maelstrom | Atrapa 2 turnos · `−5` por turno · inescapable |
 
+---
+
 ## Estructura del notebook
 
-El notebook sigue exactamente las secciones que pide el enunciado. Cada sección alterna celdas markdown (análisis) con celdas de código (implementación):
+El notebook sigue las secciones que pide el enunciado. Cada sección alterna celdas markdown (análisis teórico) con celdas de código (implementación):
 
 | Sección | Contenido |
 |---|---|
 | **2.1 Motivación** | Por qué este problema es interesante para RL y no resoluble con A* |
 | **2.2 Formalización MDP** | Definición completa de S, A, R, T, γ con justificación matemática |
 | **2.3 Estado del arte** | Contexto en la literatura: SSP, Windy Gridworld, Cliff Walking, DQN |
-| **2.4 Soluciones y experimentos** | Implementación + entrenamiento + resultados + gráficas + búsqueda HP + ablación |
-| **2.5 Conclusiones** | Análisis crítico de resultados, limitaciones y trabajo futuro |
+| **2.4 Soluciones y experimentos** | Contraste on/off-policy · implementación · entrenamiento · resultados · gráficas · búsqueda HP · ablación |
+| **2.5 Conclusiones** | Convergencia · observaciones · hiperparámetros · maelstrom · limitaciones · trabajo futuro |
 
 Dentro de **2.4**, el desarrollo completo es:
 
 ```
-Constantes y mapa              ← tipos de celda, probabilidades de viento, mapa 8×10
-PirateEnv                      ← entorno Gymnasium con step(), reset(), render() pygame
-QLearningAgent                 ← off-policy, actualización por paso con max Q(s')
-SARSAAgent                     ← on-policy, actualización con Q(s', A') real
-MonteCarloAgent                ← every-visit, actualización al final del episodio
-entrenar() + evaluar()         ← bucle genérico compatible con los tres agentes
-Entrenamiento (500k ep)        ← ~40 min total, resultados guardados en .pkl
-Resultados                     ← tabla resumen con métricas de evaluación
-Gráficas convergencia          ← recompensa, victorias, epsilon decay
-Gráficas política y valor      ← mapas de flechas y función de valor V(s)
-Render pygame (en notebook)    ← animación paso a paso capturando frames SDL
-Búsqueda de hiperparámetros    ← γ y ε_min para los 3 algoritmos, 12 experimentos
-Análisis de ablación           ← Q-Learning sin maelstrom, validación del diseño
-Celdas de referencia           ← código experimental comentado para documentación
-2.5 Conclusiones               ← análisis crítico integrado de todos los resultados
+Diferencias on-policy/off-policy ← análisis teórico del comportamiento esperado
+Constantes y mapa                ← tipos de celda, probabilidades de viento, mapa 8×10
+PirateEnv                       ← entorno Gymnasium con step(), reset(), render() pygame
+QLearningAgent                  ← off-policy, actualización por paso con max Q(s')
+SARSAAgent                      ← on-policy, actualización con Q(s', A') real
+MonteCarloAgent                 ← every-visit, actualización al final del episodio
+entrenar() + evaluar()          ← bucle genérico compatible con los tres agentes
+Entrenamiento (500k ep)         ← ~30 min total, resultados guardados en .pkl
+Resultados                      ← tabla resumen con métricas de evaluación
+Gráficas convergencia           ← recompensa, victorias, epsilon decay
+Gráficas política y valor       ← mapas de flechas y función de valor V(s)
+Panel 4 vientos                 ← política aprendida para las 4 direcciones de viento
+Render pygame (en notebook)     ← animación paso a paso capturando frames SDL
+Búsqueda de hiperparámetros     ← γ y ε_min para los 3 algoritmos, 12 experimentos
+Análisis de ablación            ← Q-Learning sin maelstrom, validación del diseño
 ```
 
 ---
@@ -95,6 +97,27 @@ Los tres algoritmos comparten la misma interfaz (`elegir_accion`, `actualizar`, 
 
 ---
 
+## Resultados
+
+### Entrenamiento base (500k episodios por algoritmo)
+
+| Métrica | Q-Learning | SARSA | Monte Carlo |
+|---|---|---|---|
+| Tasa victoria (eval ε=0) | **97.2%** | 96.4% | 88.5% |
+| Recompensa media evaluación | **253.3 ± 54.1** | 252.0 ± 60.7 | 215.7 ± 97.7 |
+| Pasos medios evaluación | 45.3 | **45.1** | 51.1 |
+| Estados visitados en Q-table | 10 120 | 10 727 | 12 112 |
+
+### Búsqueda de hiperparámetros (12 experimentos × 500k episodios)
+
+Se varió γ ∈ {0.95, 0.97, 0.99} y ε_min ∈ {0.01, 0.05, 0.10} para los tres algoritmos. La configuración óptima encontrada es **γ=0.97 con ε_min=0.05** para Q-Learning y SARSA, mientras que Monte Carlo se beneficia de mayor exploración residual.
+
+### Análisis de ablación — eliminación del maelstrom
+
+Se reentrenó Q-Learning con el mapa sin maelstrom para validar que este elemento del diseño añade dificultad genuina. La mejora de +0.4pp en tasa de victoria y la reducción de pasos medios (45.3 → 44.8) confirman que el agente había aprendido a evitar el maelstrom: el diseño añade complejidad sin hacer el problema irresoluble.
+
+---
+
 ## Cómo ejecutar el notebook
 
 ### Requisitos
@@ -103,23 +126,11 @@ Los tres algoritmos comparten la misma interfaz (`elegir_accion`, `actualizar`, 
 pip install gymnasium numpy matplotlib pygame pillow
 ```
 
-### Orden de ejecución completo
+### Orden de ejecución
 
-```
-Celda 1  → Título y descripción (markdown)
-Celda 2  → separador
-...
-Celda 9  → imports y constantes globales
-Celda 10 → PirateEnv (entorno completo)
-Celda 11 → QLearningAgent
-Celda 12 → SARSAAgent
-Celda 13 → MonteCarloAgent
-Celda 14 → funciones entrenar() y evaluar()
-```
+Ejecutar las celdas de definición (constantes, clases, funciones) en orden secuencial. Después:
 
-Después, **dos opciones**:
-
-**Si quieres reentrenar desde cero** (~40 min):
+**Si quieres reentrenar desde cero** (~30 min):
 ```
 Celda de entrenamiento → entrena 500k × 3 algoritmos, guarda en resultados_entrenamiento.pkl
 ```
@@ -129,7 +140,7 @@ Celda de entrenamiento → entrena 500k × 3 algoritmos, guarda en resultados_en
 Celda de carga → carga desde resultados_entrenamiento.pkl
 ```
 
-Luego ejecuta el resto en orden: gráficas → render pygame → búsqueda HP → ablación.
+Luego ejecutar el resto en orden: gráficas → render pygame → búsqueda HP → ablación.
 
 > ⚠️ Si reinicias el kernel, ejecuta siempre las celdas de definición antes de la carga. Pickle necesita las clases en memoria para deserializar.
 
@@ -147,6 +158,7 @@ Luego ejecuta el resto en orden: gráficas → render pygame → búsqueda HP �
 
 El render usa `SDL_VIDEODRIVER=dummy` para capturar frames en memoria sin necesidad de display gráfico. La visualización se exporta como animación interactiva (jshtml) y como GIF en `plots/render_pygame.gif`.
 
+---
 
 ## Cobertura del enunciado
 
@@ -155,13 +167,13 @@ El render usa `SDL_VIDEODRIVER=dummy` para capturar frames en memoria sin necesi
 | Entorno propio adaptado a Gymnasium API | ✅ | `PirateEnv` — implementación completa |
 | Formalización MDP (S, A, R, T, γ) | ✅ | Sección 2.2 con justificación matemática |
 | Mínimo 2 algoritmos de RL | ✅ | Q-Learning + SARSA + Monte Carlo |
-| Contraste on-policy vs off-policy | ✅ | SARSA vs Q-Learning — analizado en 2.4 y 2.5 |
+| Contraste on-policy vs off-policy | ✅ | Sección 2.4 (análisis teórico) + 2.5 (resultados) |
 | Tabla de hiperparámetros justificada | ✅ | Sección 2.4 + búsqueda experimental |
 | Gráficas de convergencia | ✅ | Recompensa, victorias, epsilon decay |
 | Función de valor y mapa de política | ✅ | Visualizaciones por dirección de viento y nivel de provisiones |
 | Render / visualización del entorno | ✅ | Pygame (frames SDL) + matplotlib animación |
 | Estado del arte con ≥3 referencias | ✅ | Sección 2.3 — 6 referencias |
-| Conclusiones con análisis crítico | ✅ | Sección 2.5 con resultados de ablación y HP |
+| Conclusiones con análisis crítico | ✅ | Sección 2.5 con convergencia, observaciones, limitaciones |
 | Búsqueda de hiperparámetros | ✅ *(extra)* | 12 experimentos sistemáticos |
 | Análisis de ablación del entorno | ✅ *(extra)* | Eliminación del maelstrom — validación del diseño |
 
