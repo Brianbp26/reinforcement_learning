@@ -160,25 +160,6 @@ El render usa `SDL_VIDEODRIVER=dummy` para capturar frames en memoria sin necesi
 
 ---
 
-## Cobertura del enunciado
-
-| Requisito del enunciado | Estado | Dónde está |
-|---|---|---|
-| Entorno propio adaptado a Gymnasium API | ✅ | `PirateEnv` — implementación completa |
-| Formalización MDP (S, A, R, T, γ) | ✅ | Sección 2.2 con justificación matemática |
-| Mínimo 2 algoritmos de RL | ✅ | Q-Learning + SARSA + Monte Carlo |
-| Contraste on-policy vs off-policy | ✅ | Sección 2.4 (análisis teórico) + 2.5 (resultados) |
-| Tabla de hiperparámetros justificada | ✅ | Sección 2.4 + búsqueda experimental |
-| Gráficas de convergencia | ✅ | Recompensa, victorias, epsilon decay |
-| Función de valor y mapa de política | ✅ | Visualizaciones por dirección de viento y nivel de provisiones |
-| Render / visualización del entorno | ✅ | Pygame (frames SDL) + matplotlib animación |
-| Estado del arte con ≥3 referencias | ✅ | Sección 2.3 — 6 referencias |
-| Conclusiones con análisis crítico | ✅ | Sección 2.5 con convergencia, observaciones, limitaciones |
-| Búsqueda de hiperparámetros | ✅ *(extra)* | 12 experimentos sistemáticos |
-| Análisis de ablación del entorno | ✅ *(extra)* | Eliminación del maelstrom — validación del diseño |
-
----
-
 ## Referencias
 
 1. Sutton, R.S. & Barto, A.G. (2018). *Reinforcement Learning: An Introduction* (2ª ed.). MIT Press.
