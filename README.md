@@ -8,7 +8,7 @@
 
 ## ¿De qué va el proyecto?
 
-Implementamos un entorno de navegación personalizado usando la API de Gymnasium donde un agente controla un barco pirata en un mapa 8×10. El objetivo: recoger los cuatro cofres del mapa (de distintos valores) y regresar al puerto antes de agotar las provisiones, adaptando la ruta a un viento que cambia de dirección durante el episodio.
+Implementamos un entorno de navegación personalizado usando la API de Gymnasium donde un agente controla un barco pirata en un mapa 8x10. El objetivo: recoger los cuatro cofres del mapa (de distintos valores) y regresar al puerto antes de agotar las provisiones, adaptando la ruta a un viento que cambia de dirección durante el episodio.
 
 Lo que hace este entorno más interesante que los clásicos (FrozenLake, Taxi, CartPole) es que combina **cinco fuentes de complejidad simultáneas**:
 
@@ -18,11 +18,11 @@ Lo que hace este entorno más interesante que los clásicos (FrozenLake, Taxi, C
 - **Corrientes marinas** — desplazamiento determinista que el agente aprende a explotar como atajo o evitar según el contexto.
 - **Maelstrom** — atrapa 2 turnos con penalización fija; el agente aprende una zona de evitación absoluta incluso cuando el camino más corto pasa por él.
 
-El espacio de estados es `8 × 10 × 2⁴ × 4 × 4 = 20.480 estados` — manejable con métodos tabulares.
+El espacio de estados es `8 x 10 x 2⁴ x 4 x 4 = 20.480 estados` — manejable con métodos tabulares.
 
 ---
 
-## Mapa del entorno (8×10)
+## Mapa del entorno (8x10)
 
 ```
      Col→  0     1     2     3     4     5     6     7     8     9
@@ -64,21 +64,21 @@ El notebook sigue las secciones que pide el enunciado. Cada sección alterna cel
 Dentro de **2.4**, el desarrollo completo es:
 
 ```
-Diferencias on-policy/off-policy ← análisis teórico del comportamiento esperado
-Constantes y mapa                ← tipos de celda, probabilidades de viento, mapa 8×10
-PirateEnv                       ← entorno Gymnasium con step(), reset(), render() pygame
-QLearningAgent                  ← off-policy, actualización por paso con max Q(s')
-SARSAAgent                      ← on-policy, actualización con Q(s', A') real
-MonteCarloAgent                 ← every-visit, actualización al final del episodio
-entrenar() + evaluar()          ← bucle genérico compatible con los tres agentes
-Entrenamiento (500k ep)         ← ~30 min total, resultados guardados en .pkl
-Resultados                      ← tabla resumen con métricas de evaluación
-Gráficas convergencia           ← recompensa, victorias, epsilon decay
-Gráficas política y valor       ← mapas de flechas y función de valor V(s)
-Panel 4 vientos                 ← política aprendida para las 4 direcciones de viento
-Render pygame (en notebook)     ← animación paso a paso capturando frames SDL
-Búsqueda de hiperparámetros     ← γ y ε_min para los 3 algoritmos, 12 experimentos
-Análisis de ablación            ← Q-Learning sin maelstrom, validación del diseño
+Diferencias on-policy/off-policy <- análisis teórico del comportamiento esperado
+Constantes y mapa                <- tipos de celda, probabilidades de viento, mapa 8x10
+PirateEnv                       <- entorno Gymnasium con step(), reset(), render() pygame
+QLearningAgent                  <- off-policy, actualización por paso con max Q(s')
+SARSAAgent                      <- on-policy, actualización con Q(s', A') real
+MonteCarloAgent                 <- every-visit, actualización al final del episodio
+entrenar() + evaluar()          <- bucle genérico compatible con los tres agentes
+Entrenamiento (500k ep)         <- ~30 min total, resultados guardados en .pkl
+Resultados                      <- tabla resumen con métricas de evaluación
+Gráficas convergencia           <- recompensa, victorias, epsilon decay
+Gráficas política y valor       <- mapas de flechas y función de valor V(s)
+Panel 4 vientos                 <- política aprendida para las 4 direcciones de viento
+Render pygame (en notebook)     <- animación paso a paso capturando frames SDL
+Búsqueda de hiperparámetros     <- γ y ε_min para los 3 algoritmos, 12 experimentos
+Análisis de ablación            <- Q-Learning sin maelstrom, validación del diseño
 ```
 
 ---
@@ -108,13 +108,13 @@ Los tres algoritmos comparten la misma interfaz (`elegir_accion`, `actualizar`, 
 | Pasos medios evaluación | 45.3 | **45.1** | 51.1 |
 | Estados visitados en Q-table | 10 120 | 10 727 | 12 112 |
 
-### Búsqueda de hiperparámetros (12 experimentos × 500k episodios)
+### Búsqueda de hiperparámetros (12 experimentos x 500k episodios)
 
 Se varió γ ∈ {0.95, 0.97, 0.99} y ε_min ∈ {0.01, 0.05, 0.10} para los tres algoritmos. La configuración óptima encontrada es **γ=0.97 con ε_min=0.05** para Q-Learning y SARSA, mientras que Monte Carlo se beneficia de mayor exploración residual.
 
 ### Análisis de ablación — eliminación del maelstrom
 
-Se reentrenó Q-Learning con el mapa sin maelstrom para validar que este elemento del diseño añade dificultad genuina. La mejora de +0.4pp en tasa de victoria y la reducción de pasos medios (45.3 → 44.8) confirman que el agente había aprendido a evitar el maelstrom: el diseño añade complejidad sin hacer el problema irresoluble.
+Se reentrenó Q-Learning con el mapa sin maelstrom para validar que este elemento del diseño añade dificultad genuina. La mejora de +0.4pp en tasa de victoria y la reducción de pasos medios (45.3 -> 44.8) confirman que el agente había aprendido a evitar el maelstrom: el diseño añade complejidad sin hacer el problema irresoluble.
 
 ---
 
@@ -132,7 +132,7 @@ Ejecutar las celdas de definición (constantes, clases, funciones) en orden secu
 
 **Si quieres reentrenar desde cero** (~30 min):
 ```
-Celda de entrenamiento → entrena 500k × 3 algoritmos, guarda en resultados_entrenamiento.pkl
+Celda de entrenamiento -> entrena 300k x 3 algoritmos, guarda en resultados_entrenamiento.pkl
 ```
 
 **Si ya tienes el `.pkl` en disco**:
@@ -142,7 +142,7 @@ Celda de carga → carga desde resultados_entrenamiento.pkl
 
 Luego ejecutar el resto en orden: gráficas → render pygame → búsqueda HP → ablación.
 
-> ⚠️ Si reinicias el kernel, ejecuta siempre las celdas de definición antes de la carga. Pickle necesita las clases en memoria para deserializar.
+> Si reinicias el kernel, ejecuta siempre las celdas de definición antes de la carga. Pickle necesita las clases en memoria para deserializar.
 
 ### Archivos `.pkl` generados
 
