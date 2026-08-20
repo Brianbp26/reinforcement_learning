@@ -1,3 +1,25 @@
+# 🏴‍☠️ Reinforcement Learning: Custom Pirate Ship Environment
+
+> 🎓 **Academic Project** | *Universidad Politécnica de Madrid (UPM)*
+> 👥 **Team Project:** Co-authored with my colleagues from the Data Science & AI degree.
+
+### 📝 About the Project
+This project explores tabular Reinforcement Learning (RL) by implementing a custom navigation environment from scratch using the Gymnasium API. The agent controls a pirate ship on an 8x10 grid with the objective of collecting four chests of varying values (+20, +35, +50, +70) and returning to port before running out of provisions.
+
+Unlike standard benchmark environments, this custom gridworld combines five simultaneous sources of complexity: variable wind directions altering transition distributions, combinatorial chest collection strategies, discrete provision levels dictating policy shifts, deterministic sea currents, and a "Maelstrom" trap. The state space consists of 20,480 states, making it a highly challenging yet solvable problem for tabular methods.
+
+### 👨‍💻 My Contribution & Role
+As an active member of this team, my technical contributions included:
+
+- **Algorithm Implementation & Comparison:** Developed and evaluated three distinct RL algorithms from scratch: Q-Learning (off-policy), SARSA (on-policy), and Monte Carlo (every-visit). Successfully achieved a 97.2% win rate using Q-Learning.
+- **Environment Design:** Built the custom Gymnasium environment integrating Markov Decision Process (MDP) principles to handle stochastic transitions (variable wind) and complex reward functions.
+- **Hyperparameter Optimization:** Designed a comprehensive 12-experiment search to tune the discount factor (γ) and exploration rate (ε_min) across all three algorithms, ensuring optimal convergence.
+- **Ablation Studies:** Conducted an ablation analysis by removing the Maelstrom trap to validate the environment's design, proving the agent successfully learned active avoidance strategies.
+- **Visual Rendering:** Integrated Pygame to capture SDL frames in memory (using a dummy video driver), generating interactive in-notebook animations and GIFs of the agent's learned policies.
+
+---
+*Note: This is a forked repository to showcase my specific contributions to this academic project. The original repository is hosted by my colleague.*
+
 # 🏴‍☠️ Barco Pirata — Aprendizaje por Refuerzo
 
 **Asignatura:** Aprendizaje Automático II — Bloque RL  
